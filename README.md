@@ -100,11 +100,6 @@ All behavioral signals are multiplicative modifiers (0.3x to 1.3x) applied after
 - **Dependencies**: Python standard library only
 - **Network**: None
 
-## AI Tools Used
-
-- **Antigravity (AI Coding Assistant)**: Architecture discussion, code generation, and review
-- All candidate data processing and ranking logic runs locally with zero external API calls
-
 ## Methodology Summary
 
 Rule-based ranker with trust-weighted skill scoring and behavioral signal modifiers. Six scoring dimensions (title/career 30%, skills 25%, career descriptions 15%, experience 15%, location 10%, education 5%) combined multiplicatively with an 11-signal behavioral modifier. Title and career trajectory serve as the primary discriminator against keyword-stuffer traps. Honeypot detection uses five anomaly checks (salary inversion, expert-skill inflation, assessment contradictions, impossible dates, signup-after-active). Runtime is ~30-60 seconds for 100K candidates on CPU.
