@@ -117,18 +117,17 @@ def generate_index_html():
         {{
           entrypoint: "app.py",
           files: filesData,
-          requirements: ["pandas", "plotly", "pyyaml"],
-          onMounted: () => {{
-            // Fade out splash screen when streamlit finishes mounting
-            const loader = document.getElementById("loading-screen");
-            loader.style.opacity = "0";
-            setTimeout(() => {{
-              loader.remove();
-            }}, 500);
-          }}
+          requirements: ["pandas", "plotly", "pyyaml"]
         }},
         document.getElementById("root")
-      );
+      ).then(() => {{
+        // Fade out splash screen when streamlit finishes mounting
+        const loader = document.getElementById("loading-screen");
+        loader.style.opacity = "0";
+        setTimeout(() => {{
+          loader.remove();
+        }}, 500);
+      }});
     </script>
   </body>
 </html>
