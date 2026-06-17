@@ -1,0 +1,19 @@
+# Python files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large files / Data files
+candidates.jsonl
+candidates.jsonl.gz
+submission.csv
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/

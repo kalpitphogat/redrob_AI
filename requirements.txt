@@ -1,0 +1,7 @@
+# Dependencies for Redrob Candidate Ranker
+# Core ranking uses only Python standard library.
+# The Sandbox App requires:
+streamlit>=1.30.0
+pandas>=2.0.0
+plotly>=5.15.0
+pyyaml>=6.0

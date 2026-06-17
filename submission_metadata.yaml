@@ -1,0 +1,44 @@
+# Redrob Hackathon — Submission Metadata
+team_name: "kalpitphogat"
+
+primary_contact:
+  name: "Kalpit Phogat"
+  email: "kalpitphogat@gmail.com"
+  phone: "+91-XXXXXXXXXX"
+
+team_members:
+  - name: "Kalpit Phogat"
+    email: "kalpitphogat@gmail.com"
+    role: "ML Engineer"
+
+github_repo: "https://github.com/kalpitphogat/redrob_AI"
+sandbox_link: "https://redrob-ai.streamlit.app"
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+
+compute:
+  platform: "Local PC"
+  cpu_cores: 8
+  ram_gb: 16
+  python_version: "3.11.4"
+  os: "Windows 11"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: false
+  pre_computation_time_minutes: 0
+
+ai_tools_used:
+  - "Claude"
+  - "Gemini"
+
+ai_usage_summary: |
+  Used Gemini to design code architecture, write ranking scoring stages, build Streamlit sandbox application, and automate tie-breaking logic. No candidate data was shared with external API calls.
+
+methodology_summary: |
+  Rule-based candidate ranker with explicit reasoning capture. Five scoring components (skills, title+career, experience years, location, education) combined with a multiplicative behavioral-signal modifier. The title component is the decisive signal against keyword-stuffer traps; an endorsement-and-duration trust multiplier on skills catches lazy keyword stuffing. Runtime is ~38 seconds for 100K candidates on CPU.
+
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true
