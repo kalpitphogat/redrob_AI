@@ -13,6 +13,7 @@ FILES_TO_EMBED = [
     "reasoning.py",
     "ranker.py",
     "sample_candidates.json",
+    "submission_metadata.yaml",
 ]
 
 def generate_index_html():
