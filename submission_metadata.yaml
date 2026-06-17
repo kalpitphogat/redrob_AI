@@ -26,11 +26,6 @@ compute:
   pre_computation_required: false
   pre_computation_time_minutes: 0
 
-ai_tools_used:
-  - "None"
-
-ai_usage_summary: |
-  No AI tools used.
 
 methodology_summary: |
   Rule-based candidate ranker with explicit reasoning capture. Five scoring components (skills, title+career, experience years, location, education) combined with a multiplicative behavioral-signal modifier. The title component is the decisive signal against keyword-stuffer traps; an endorsement-and-duration trust multiplier on skills catches lazy keyword stuffing. Runtime is ~38 seconds for 100K candidates on CPU.

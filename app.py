@@ -653,8 +653,7 @@ with tab_meta:
                 "pre_computation_required": False,
                 "pre_computation_time_minutes": 0
             },
-            "ai_tools_used": ["None"],
-            "ai_usage_summary": "No AI tools used.",
+
             "methodology_summary": "Standard python implementation of multi-stage Candidate discovery. Consists of fast pre-filtering (Stage 1), honeypot extraction, title relevance mapping, semantic trust weighting on skills, and behavioral modifications.",
             "declarations": {
                 "read_submission_spec": True,
