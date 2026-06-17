@@ -1,14 +1,14 @@
 # Redrob Hackathon — Submission Metadata
-team_name: "kalpitphogat"
+team_name: "echoingwhispers"
 
 primary_contact:
-  name: "Kalpit Phogat"
-  email: "kalpitphogat@gmail.com"
-  phone: "+91-XXXXXXXXXX"
+  name: "Kalpit"
+  email: "kalpitphogat2@gmail.com"
+  phone: "+91-7082318282"
 
 team_members:
-  - name: "Kalpit Phogat"
-    email: "kalpitphogat@gmail.com"
+  - name: "Kalpit"
+    email: "kalpitphogat2@gmail.com"
     role: "ML Engineer"
 
 github_repo: "https://github.com/kalpitphogat/redrob_AI"
