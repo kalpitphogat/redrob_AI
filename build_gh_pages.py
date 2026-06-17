@@ -40,8 +40,7 @@ def generate_index_html():
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta
       name="viewport"
-      width="device-width"
-      initial-scale="1, shrink-to-fit=no"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <title>Redrob AI Candidate Ranker Sandbox</title>
     <!-- stlite CSS -->
