@@ -13,8 +13,8 @@ The scoring is designed to reward genuine AI/ML engineers with
 production experience, NOT keyword stuffers with inflated skill lists.
 """
 
+import config
 from config import (
-    WEIGHTS,
     TITLE_SCORES,
     MUST_HAVE_SKILLS,
     STRONG_WANT_SKILLS,
@@ -557,9 +557,9 @@ def compute_base_score(candidate: dict) -> tuple[float, dict]:
         "education": score_education(candidate),
     }
 
-    # Weighted sum
+    # Weighted sum — reads config.WEIGHTS live so slider changes take effect
     total = sum(
-        breakdown[dim] * WEIGHTS[dim]
+        breakdown[dim] * config.WEIGHTS[dim]
         for dim in breakdown
     )
 

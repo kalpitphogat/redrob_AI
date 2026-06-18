@@ -195,30 +195,32 @@ st.sidebar.caption(
     f"Exp {w_exp_n:.0%} · Loc {w_loc_n:.0%} · Edu {w_edu_n:.0%}"
 )
 
-# Apply to global config (used by scorer)
-config.WEIGHTS = {
+# Apply to global config — use .update() NOT reassignment
+# scorer.py holds a reference to this same dict object;
+# reassigning would create a new dict scorer.py never sees.
+config.WEIGHTS.update({
     "title_career":      w_title_n,
     "skills_match":      w_skills_n,
     "career_description": w_desc_n,
     "experience_fit":    w_exp_n,
     "location":          w_loc_n,
     "education":         w_edu_n,
-}
+})
 
 # Run Pipeline
 # NOTE: We do NOT use @st.cache_data here because:
 # (a) candidates is a list-of-dicts which is unhashable in stlite
 # (b) we WANT re-scoring when weights change
 def run_pipeline(candidates, enable_pre, enable_hp, weights_tuple):
-    # Unpack weights tuple and set config
-    config.WEIGHTS = {
+    # Apply weights to config — mutate in place so scorer.py sees the update
+    config.WEIGHTS.update({
         "title_career":      weights_tuple[0],
         "skills_match":      weights_tuple[1],
         "career_description": weights_tuple[2],
         "experience_fit":    weights_tuple[3],
         "location":          weights_tuple[4],
         "education":         weights_tuple[5],
-    }
+    })
     
     # 1. Pre-filter
     if enable_pre:
