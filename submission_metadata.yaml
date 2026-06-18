@@ -12,7 +12,7 @@ team_members:
     role: "ML Engineer"
 
 github_repo: "https://github.com/kalpitphogat/redrob_AI"
-sandbox_link: "https://redrob-ai.streamlit.app"
+sandbox_link: "https://redrobai.streamlit.app"
 reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
 
 compute:
