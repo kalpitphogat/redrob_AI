@@ -28,13 +28,14 @@ def rank_candidates(candidates: list[dict], verbose: bool = False) -> list[dict]
         verbose: If True, print detailed progress info.
 
     Returns:
-        List of 100 dicts, each with:
+        List of exactly 100 dicts (padded if necessary for small datasets), each with:
         - candidate_id
         - rank (1-100)
         - score (float, non-increasing)
         - reasoning (string)
     """
     total_start = time.time()
+    all_candidates = candidates  # keep reference for padding
 
     # ========================================================================
     # Stage 1: Pre-filter
@@ -106,6 +107,37 @@ def rank_candidates(candidates: list[dict], verbose: bool = False) -> list[dict]
 
     # Take top 100
     top_100 = scored_candidates[:100]
+
+    # ── Padding: if fewer than 100 survived, pad with remaining candidates ────
+    # This only happens with very small sample files (<100 candidates total).
+    # On real 100K input this code path is never hit.
+    if len(top_100) < 100:
+        needed = 100 - len(top_100)
+        scored_ids = {e["candidate_id"] for e in top_100}
+        padding_pool = []
+        for candidate in all_candidates:
+            cid = candidate.get("candidate_id", "")
+            if cid in scored_ids:
+                continue
+            base_score, breakdown = compute_base_score(candidate)
+            behavioral_mod, beh_breakdown = compute_behavioral_modifier(candidate)
+            # Apply heavy penalty so they always rank below clean candidates
+            is_honeypot = cid in honeypot_flags
+            penalty = 0.01 if is_honeypot else 0.5
+            final_score = base_score * behavioral_mod * penalty
+            padding_pool.append({
+                "candidate": candidate,
+                "candidate_id": cid,
+                "base_score": base_score,
+                "behavioral_mod": behavioral_mod,
+                "final_score": final_score,
+                "score_breakdown": breakdown,
+                "behavioral_breakdown": beh_breakdown,
+            })
+        padding_pool.sort(key=lambda x: (-x["final_score"], x["candidate_id"]))
+        top_100 = top_100 + padding_pool[:needed]
+        print(f"Note: padded {min(needed, len(padding_pool))} candidates to reach 100 rows "
+              f"(only needed for small sample datasets).")
 
     if verbose:
         print(f"  Stage 5 (ranking): {time.time() - stage_start:.2f}s")

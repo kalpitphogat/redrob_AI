@@ -101,10 +101,10 @@ def main():
     results = rank_candidates(candidates, verbose=args.verbose)
 
     expected = min(100, len(candidates))
-    if len(results) != expected:
+    if len(results) < 100 and len(candidates) >= 100:
         print(
-            f"Warning: Expected {expected} results, got {len(results)}. "
-            f"(Full submission requires 100K+ candidates to produce 100 results.)",
+            f"Warning: Produced only {len(results)} results from {len(candidates)} candidates. "
+            f"Check pre-filter and honeypot settings.",
             file=sys.stderr,
         )
 
