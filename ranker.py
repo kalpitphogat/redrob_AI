@@ -164,6 +164,7 @@ def rank_candidates(candidates: list[dict], verbose: bool = False) -> list[dict]
     # Print score distribution
     scores = [r["score"] for r in results]
     print(f"\nScore range: {min(scores):.4f} — {max(scores):.4f}")
-    print(f"Median score: {scores[49]:.4f}")
+    mid = len(scores) // 2
+    print(f"Median score: {scores[mid]:.4f}")
 
     return results
