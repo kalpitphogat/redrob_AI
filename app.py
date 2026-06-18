@@ -91,6 +91,11 @@ DEFAULT_WEIGHTS = {
     "education": 0.05,
 }
 
+# Initialize session state for slider values on first run
+for key, val in DEFAULT_WEIGHTS.items():
+    if f"w_{key}" not in st.session_state:
+        st.session_state[f"w_{key}"] = val
+
 # Header Banner
 st.markdown("""
 <div class="header-container">
@@ -159,55 +164,60 @@ enable_honeypots = st.sidebar.checkbox("Filter out Honeypots (Traps)", value=Tru
 
 # 3. Dynamic Weight Tuning
 st.sidebar.subheader("Scoring Weight Tuning")
-st.sidebar.markdown("<small>Adjust sliders below. Weights will be auto-normalized to sum to 100%.</small>", unsafe_allow_html=True)
+st.sidebar.markdown("<small>Adjust sliders below. Weights are auto-normalized to sum to 100%.</small>", unsafe_allow_html=True)
 
-w_title = st.sidebar.slider("Title & Career Trajectory", 0.0, 1.0, DEFAULT_WEIGHTS["title_career"], 0.05)
-w_skills = st.sidebar.slider("Skills Alignment", 0.0, 1.0, DEFAULT_WEIGHTS["skills_match"], 0.05)
-w_desc = st.sidebar.slider("Career Descriptions Analysis", 0.0, 1.0, DEFAULT_WEIGHTS["career_description"], 0.05)
-w_exp = st.sidebar.slider("Experience Band Fit", 0.0, 1.0, DEFAULT_WEIGHTS["experience_fit"], 0.05)
-w_loc = st.sidebar.slider("Location Proximity", 0.0, 1.0, DEFAULT_WEIGHTS["location"], 0.05)
-w_edu = st.sidebar.slider("Education Background", 0.0, 1.0, DEFAULT_WEIGHTS["education"], 0.05)
+# Reset button must update session_state BEFORE sliders render
+if st.sidebar.button("↺ Reset Weights to Default"):
+    for key, val in DEFAULT_WEIGHTS.items():
+        st.session_state[f"w_{key}"] = val
 
-if st.sidebar.button("Reset Weights to Default"):
-    w_title = DEFAULT_WEIGHTS["title_career"]
-    w_skills = DEFAULT_WEIGHTS["skills_match"]
-    w_desc = DEFAULT_WEIGHTS["career_description"]
-    w_exp = DEFAULT_WEIGHTS["experience_fit"]
-    w_loc = DEFAULT_WEIGHTS["location"]
-    w_edu = DEFAULT_WEIGHTS["education"]
+# Sliders use session_state as their value source (key= binds them two-way)
+w_title = st.sidebar.slider("Title & Career Trajectory", 0.0, 1.0, step=0.05, key="w_title_career")
+w_skills = st.sidebar.slider("Skills Alignment",          0.0, 1.0, step=0.05, key="w_skills_match")
+w_desc   = st.sidebar.slider("Career Description Analysis",0.0, 1.0, step=0.05, key="w_career_description")
+w_exp    = st.sidebar.slider("Experience Band Fit",        0.0, 1.0, step=0.05, key="w_experience_fit")
+w_loc    = st.sidebar.slider("Location Proximity",         0.0, 1.0, step=0.05, key="w_location")
+w_edu    = st.sidebar.slider("Education Background",       0.0, 1.0, step=0.05, key="w_education")
 
-# Normalize weights
+# Show live normalized percentages
 sum_w = w_title + w_skills + w_desc + w_exp + w_loc + w_edu
 if sum_w == 0:
     sum_w = 1.0
 w_title_n = w_title / sum_w
 w_skills_n = w_skills / sum_w
-w_desc_n = w_desc / sum_w
-w_exp_n = w_exp / sum_w
-w_loc_n = w_loc / sum_w
-w_edu_n = w_edu / sum_w
+w_desc_n   = w_desc   / sum_w
+w_exp_n    = w_exp    / sum_w
+w_loc_n    = w_loc    / sum_w
+w_edu_n    = w_edu    / sum_w
 
-# Set configuration globally
+st.sidebar.caption(
+    f"Normalized: Title {w_title_n:.0%} · Skills {w_skills_n:.0%} · Desc {w_desc_n:.0%} · "
+    f"Exp {w_exp_n:.0%} · Loc {w_loc_n:.0%} · Edu {w_edu_n:.0%}"
+)
+
+# Apply to global config (used by scorer)
 config.WEIGHTS = {
-    "title_career": w_title_n,
-    "skills_match": w_skills_n,
+    "title_career":      w_title_n,
+    "skills_match":      w_skills_n,
     "career_description": w_desc_n,
-    "experience_fit": w_exp_n,
-    "location": w_loc_n,
-    "education": w_edu_n,
+    "experience_fit":    w_exp_n,
+    "location":          w_loc_n,
+    "education":         w_edu_n,
 }
 
 # Run Pipeline
-@st.cache_data
+# NOTE: We do NOT use @st.cache_data here because:
+# (a) candidates is a list-of-dicts which is unhashable in stlite
+# (b) we WANT re-scoring when weights change
 def run_pipeline(candidates, enable_pre, enable_hp, weights_tuple):
     # Unpack weights tuple and set config
     config.WEIGHTS = {
-        "title_career": weights_tuple[0],
-        "skills_match": weights_tuple[1],
+        "title_career":      weights_tuple[0],
+        "skills_match":      weights_tuple[1],
         "career_description": weights_tuple[2],
-        "experience_fit": weights_tuple[3],
-        "location": weights_tuple[4],
-        "education": weights_tuple[5],
+        "experience_fit":    weights_tuple[3],
+        "location":          weights_tuple[4],
+        "education":         weights_tuple[5],
     }
     
     # 1. Pre-filter
